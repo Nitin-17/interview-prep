@@ -1,6 +1,5 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
-import { dummyInterviews } from "@/constants";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
   getInterviewsByUserId,
@@ -17,8 +16,14 @@ const Page = async () => {
     await getLatestInterviews({ userId: user?.id! }),
   ]);
 
-  const hasPastInterviews = userInterviews?.length > 0;
-  const hasUpcomingInterviews = latestInterviews?.length > 0;
+  const hasPastInterviews = userInterviews?.length! > 0;
+  const hasUpcomingInterviews = latestInterviews?.length! > 0;
+  console.log(
+    "hasPasinterviews++++++++++++++++",
+    userInterviews,
+    latestInterviews,
+    user
+  );
   return (
     <>
       <section className="card-cta">
@@ -45,7 +50,15 @@ const Page = async () => {
         <div className="interviews-section">
           {hasPastInterviews ? (
             userInterviews?.map((interview) => (
-              <InterviewCard key={interview.id} {...interview} />
+              <InterviewCard
+                key={interview.id}
+                userId={user?.id}
+                interviewId={interview?.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
             ))
           ) : (
             <p>You haven't taken any interviews yet</p>
@@ -58,7 +71,15 @@ const Page = async () => {
         <div className="interviews-section">
           {hasUpcomingInterviews ? (
             latestInterviews?.map((interview) => (
-              <InterviewCard key={interview.id} {...interview} />
+              <InterviewCard
+                key={interview.id}
+                userId={user?.id}
+                interviewId={interview?.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
             ))
           ) : (
             <p>There are no new Interviews Available</p>
