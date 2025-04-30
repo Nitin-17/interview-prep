@@ -104,36 +104,3 @@ export const isAuthenticated = async () => {
   const user = await getCurrentUser();
   return !!user; //turn the object into boolean value
 };
-
-export const getInterviewsByUserId = async (
-  userId: string
-): Promise<Interview[] | null> => {
-  const interviews = await db
-    .collection("interviews")
-    .where("userId", "==", userId)
-    .orderBy("createdAt", "desc")
-    .get();
-
-  return interviews.docs.map((doc) => ({
-    id: doc?.id,
-    ...doc.data(),
-  })) as Interview[];
-};
-
-export const getLatestInterviews = async (
-  params: GetLatestInterviewsParams
-): Promise<Interview[] | null> => {
-  const { userId, limit = 20 } = params;
-  const interviews = await db
-    .collection("interviews")
-    .where("finalized", "==", true)
-    .where("userId", "!=", userId)
-    .orderBy("createdAt", "desc")
-    .limit(limit)
-    .get();
-
-  return interviews.docs.map((doc) => ({
-    id: doc?.id,
-    ...doc.data(),
-  })) as Interview[];
-};
